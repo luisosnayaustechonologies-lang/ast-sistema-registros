@@ -7,9 +7,10 @@ from openpyxl.styles import Font, PatternFill, Alignment, Border, Side
 import pandas as pd
 
 app = Flask(__name__)
-
 # 1. Configuración de la Base de Datos
-app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///ast.db'
+# Esta parte ayuda a que Render encuentre el archivo ast.db sin importar dónde esté instalado
+basedir = os.path.abspath(os.path.dirname(__file__)) 
+app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///' + os.path.join(basedir, 'ast.db')
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 
 db = SQLAlchemy(app)
