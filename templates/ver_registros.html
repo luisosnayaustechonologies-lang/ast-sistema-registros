@@ -1,0 +1,178 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Historial AST - US Technologies</title>
+    <style>
+        /* Estilos base */
+        body { 
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; 
+            margin: 0; 
+            padding: 30px;
+            background-color: #f0f2f5; 
+            color: #333;
+        }
+        
+        .container { 
+            max-width: 1200px; 
+            margin: auto; 
+            background: white; 
+            padding: 25px; 
+            border-radius: 12px; 
+            box-shadow: 0 4px 15px rgba(0,0,0,0.1); 
+        }
+
+        /* Navegación y Header */
+        .nav-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-bottom: 2px solid #eee;
+            padding-bottom: 20px;
+            margin-bottom: 25px;
+        }
+
+        .brand {
+            display: flex;
+            align-items: center;
+        }
+
+        .logo-small {
+            height: 45px;
+            width: auto;
+            margin-right: 15px;
+        }
+
+        .nav-buttons {
+            display: flex;
+            gap: 15px;
+        }
+
+        /* Botones */
+        .btn {
+            padding: 10px 18px;
+            border-radius: 6px;
+            text-decoration: none;
+            font-weight: 600;
+            font-size: 0.9rem;
+            transition: 0.3s;
+            display: inline-flex;
+            align-items: center;
+        }
+
+        .btn-back {
+            color: #555;
+            background: #e9ecef;
+        }
+        .btn-back:hover { background: #dee2e6; }
+
+        .btn-excel {
+            background-color: #217346;
+            color: white;
+        }
+        .btn-excel:hover { background-color: #1a5a37; }
+
+        /* Tabla */
+        .table-wrapper {
+            overflow-x: auto;
+        }
+
+        table { 
+            width: 100%; 
+            border-collapse: collapse; 
+            margin-top: 10px;
+        }
+
+        th { 
+            background-color: #1a3a5a; 
+            color: white; 
+            text-align: left; 
+            padding: 15px;
+            font-size: 0.85rem;
+            text-transform: uppercase;
+        }
+
+        td { 
+            padding: 12px 15px; 
+            border-bottom: 1px solid #eee; 
+            font-size: 0.9rem;
+        }
+
+        tr:hover { background-color: #f8f9fa; }
+
+        /* Estados y etiquetas */
+        .fecha-col { color: #666; font-size: 0.8rem; min-width: 120px; }
+        .id-badge { font-weight: bold; color: #0056b3; }
+        
+        .btn-delete {
+            color: #dc3545;
+            text-decoration: none;
+            font-weight: bold;
+        }
+        .btn-delete:hover { color: #a71d2a; text-decoration: underline; }
+
+        h2 { margin: 0; color: #1a3a5a; font-size: 1.4rem; }
+    </style>
+</head>
+<body>
+
+    <div class="container">
+        <header class="nav-header">
+            <div class="brand">
+                <img src="{{ url_for('static', filename='images/logo.png') }}" alt="Logo" class="logo-small">
+                <h2>Panel de Control AST</h2>
+            </div>
+            
+            <div class="nav-buttons">
+                <a href="/" class="btn btn-back">← Nuevo Registro</a>
+                <a href="/exportar" class="btn btn-excel">📊 Exportar Excel</a>
+            </div>
+        </header>
+
+        <div class="table-wrapper">
+            <table>
+                <thead>
+                    <tr>
+                        <th>Fecha y Hora</th>
+                        <th>ID</th>
+                        <th>Responsable</th>
+                        <th>Área</th>
+                        <th>Tarea</th>
+                        <th>Riesgo</th>
+                        <th>Control</th>
+                        <th>Acción</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for registro in registros %}
+                    <tr>
+                        <td class="fecha-col">{{ registro.fecha.strftime('%d/%m/%Y %H:%M') }}</td>
+                        <td class="id-badge">#{{ registro.id }}</td>
+                        <td>{{ registro.responsable }}</td>
+                        <td>{{ registro.area }}</td>
+                        <td>{{ registro.tarea }}</td>
+                        <td>{{ registro.riesgo }}</td>
+                        <td>{{ registro.control }}</td>
+                        <td>
+                            <a href="{{ url_for('eliminar_ast', id=registro.id) }}" 
+                               class="btn-delete"
+                               onclick="return confirm('¿Confirmas que deseas eliminar este registro?')">
+                               Eliminar
+                            </a>
+                        </td>
+                    </tr>
+                    {% else %}
+                    <tr>
+                        <td colspan="8" style="text-align: center; color: #999; padding: 50px;">
+                            No hay registros almacenados actualmente.
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+</body>
+</html>
